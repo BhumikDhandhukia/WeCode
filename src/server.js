@@ -28,7 +28,7 @@ app.get('/startcodepage',(req,res)=>{
 
 app.get('/image',(req,res)=>{
     app.use(express.static('pages'));
-    res.sendFile(path.resolve(__dirname,'pages','wecode2.png')); 
+    res.sendFile(path.resolve(__dirname,'pages','wecode4.png')); 
      
 });
     app.post("/compile",(request,response)=>{
@@ -40,7 +40,7 @@ app.get('/image',(req,res)=>{
         var withinput=request.body.withInput;
         var code=request.body.code;
         if(lang==='C'||lang==='Cpp '){
-            var envData={OS: "windows", cmd: "g++" , options:{timeout:10000}};
+            var envData={OS: "windows", cmd: "g++" , options:{timeout:50000}};
             if(withinput){
                 
                 compiler.compileCPPWithInput(envData,code,input,function (data) {
