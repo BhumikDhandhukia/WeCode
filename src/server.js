@@ -20,8 +20,16 @@ app.get('',(req,res)=>{
 app.get('/startcodepage',(req,res)=>{
     app.use(express.static('public'));
     return res.sendFile(path.resolve("./",'public','index.html')); 
+
+
 });
 
+});
+
+app.get('/image',(req,res)=>{
+    app.use(express.static('pages'));
+    res.sendFile(path.resolve(__dirname,'pages','wecode2.png')); 
+     
 });
     app.post("/compile",(request,response)=>{
         console.log("RECEIVED");
