@@ -1,5 +1,7 @@
 const express=require('express');
 var compiler=require('compilex');
+var axios =require('axios');
+require('dotenv').config();
 
 const app=express();
 const path=require('path');
@@ -28,7 +30,7 @@ app.get('/startcodepage',(req,res)=>{
 
 app.get('/image',(req,res)=>{
     app.use(express.static('pages'));
-    res.sendFile(path.resolve(__dirname,'pages','wecode2.png')); 
+    res.sendFile(path.resolve(__dirname,'pages','wecode4.png')); 
      
 });
     app.post("/compile",(request,response)=>{
@@ -37,55 +39,88 @@ app.get('/image',(req,res)=>{
         var lang=request.body.lang;
         var input=request.body.input;
         console.log(input);
-        var withinput=request.body.withInput;
+        
         var code=request.body.code;
-        if(lang==='C'||lang==='Cpp '){
-            var envData={OS: "windows", cmd: "g++" , options:{timeout:10000}};
-            if(withinput){
-                
-                compiler.compileCPPWithInput(envData,code,input,function (data) {
-                   return response.json(data);
-                });
-            }
-            else{
-                compiler.compileCPP(envData,code,function (data) {
-                    return response.json(data);
-                 });
-                
-                }
+        
+        const program = {
+            "clientId" : process.env.CLIENT_ID,
+            "clientSecret" :process.env.SECRET,
+            "script" : code,
+            "language" : lang,
+            "versionIndex" : "0",
+            "stdin" : input
         }
+        const url = "https://api.jdoodle.com/v1/execute";
 
-        if(lang==='Python'){
-            var envData={OS: "windows",  options:{timeout:1000}};
-            if(withinput ){
-                
-                compiler.compilePythonWithInput(envData,code,input,function (data) {
-                   return response.json(data);
-                });
-            }
-            else{
-                compiler.compilePython(envData,code,function (data) {
-                    return response.json(data);
-                 });
-                
-                }
-        }
+        axios.post(url,program)
+        .then(resp => {
+            console.log('jdoodleResp')
+            console.log(resp.data)
+            response.send(resp.data)
+        })
+        .catch(error => {
 
-        if(lang==='Java'){
-            var envData={OS: "windows",  options:{timeout:10000}};
-            if(withinput){
+          
+            response.send('error')
+            
+        })
+
+
+
+        
+         
+
+
+
+
+
+        // if(lang==='C'||lang==='Cpp '){
+        //     var envData={OS: "windows", cmd: "g++" , options:{timeout:10000}};
+        //     if(withinput){
                 
-                compiler.compileJavaWithInput(envData,code,input,function (data) {
-                   return response.json(data);
-                });
-            }
-            else{
-                compiler.compileJava(envData,code,function (data) {
-                    return response.json(data);
-                 });
+        //         compiler.compileCPPWithInput(envData,code,input,function (data) {
+        //            return response.json(data);
+        //         });
+        //     }
+        //     else{
+        //         compiler.compileCPP(envData,code,function (data) {
+        //             return response.json(data);
+        //          });
                 
-                }
-        }
+        //         }
+        // }
+
+        // if(lang==='Python'){
+        //     var envData={OS: "windows",  options:{timeout:1000}};
+        //     if(withinput ){
+                
+        //         compiler.compilePythonWithInput(envData,code,input,function (data) {
+        //            return response.json(data);
+        //         });
+        //     }
+        //     else{
+        //         compiler.compilePython(envData,code,function (data) {
+        //             return response.json(data);
+        //          });
+                
+        //         }
+        // }
+
+        // if(lang==='Java'){
+        //     var envData={OS: "windows",  options:{timeout:10000}};
+        //     if(withinput){
+                
+        //         compiler.compileJavaWithInput(envData,code,input,function (data) {
+        //            return response.json(data);
+        //         });
+        //     }
+        //     else{
+        //         compiler.compileJava(envData,code,function (data) {
+        //             return response.json(data);
+        //          });
+                
+        //         }
+        // }
         
         
         
