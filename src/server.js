@@ -7,7 +7,7 @@ const app=express();
 const path=require('path');
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
-const port =5000;
+const port =3000;
 var option= {stats:true};
 compiler.init(option);
 
